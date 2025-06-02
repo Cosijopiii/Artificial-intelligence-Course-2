@@ -11,7 +11,7 @@ G = ox.graph_from_place(place, network_type='drive')
 
 # Get 10 random delivery points
 nodes = list(G.nodes)
-delivery_nodes = random.sample(nodes, 10)
+delivery_nodes = random.sample(nodes, 15)
 
 # Save lat/lon of delivery points
 delivery_points = []
@@ -51,9 +51,9 @@ for i in range(len(delivery_points)):
     time_matrix.append(row_time)
 
 # Export results
-pd.DataFrame(delivery_points).to_csv("ciudad_ixtepec_points.csv", index=False)
-pd.DataFrame(distance_matrix).to_csv("ciudad_ixtepec_distance_matrix.csv", index=False)
-pd.DataFrame(time_matrix).to_csv("ciudad_ixtepec_time_matrix.csv", index=False)
+pd.DataFrame(delivery_points).to_csv("EMO/ciudad_ixtepec_points.csv", index=False)
+pd.DataFrame(distance_matrix).to_csv("EMO/ciudad_ixtepec_distance_matrix.csv", index=False)
+pd.DataFrame(time_matrix).to_csv("EMO/ciudad_ixtepec_time_matrix.csv", index=False)
 
 #%%
 import osmnx as ox
@@ -65,7 +65,7 @@ place = "Ciudad Ixtepec, Oaxaca, Mexico"
 G = ox.graph_from_place(place, network_type='drive')
 
 # Load delivery points
-df_points = pd.read_csv("ciudad_ixtepec_points.csv")
+df_points = pd.read_csv("EMO/ciudad_ixtepec_points.csv")
 lats = df_points['lat'].tolist()
 lons = df_points['lon'].tolist()
 
