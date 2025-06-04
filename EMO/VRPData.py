@@ -66,7 +66,7 @@ for i in range(len(delivery_points)):
     for j in range(len(delivery_points)):
         orig = delivery_points[i]['node']
         dest = delivery_points[j]['node']
-        if orig == dest:
+        if i == j:
             row_dist.append(0)
             row_time.append(0)
             row_turns.append(0)
@@ -75,12 +75,11 @@ for i in range(len(delivery_points)):
                 dist = nx.shortest_path_length(G, orig, dest, weight='length')
                 time = nx.shortest_path_length(G, orig, dest, weight='travel_time')
                 temp_path= nx.shortest_path(G, orig, dest, weight='length')
-
+                turns = count_turns_in_path(G, temp_path)
             except:
                 dist = float('inf')
                 time = float('inf')
-              #  turns = float('inf')
-            turns = count_turns_in_path(G, temp_path)
+                turns = float('inf')
             row_dist.append(dist)
             row_time.append(time)
             row_turns.append(turns)
@@ -149,10 +148,10 @@ import pandas as pd
 import itertools
 
 # Load matrices
-dist_matrix = pd.read_csv('EMO/ciudad_ixtepec_distance_matrix.csv', index_col=0).values
-time_matrix = pd.read_csv('EMO/ciudad_ixtepec_time_matrix.csv', index_col=0).values
-co2_matrix = pd.read_csv('EMO/ciudad_ixtepec_co2_matrix.csv', index_col=0).values
-turns_matrix= pd.read_csv('EMO/ciudad_ixtepec_turns_matrix.csv', index_col=0).values
+dist_matrix = pd.read_csv('EMO/ciudad_ixtepec_distance_matrix.csv' ).values
+time_matrix = pd.read_csv('EMO/ciudad_ixtepec_time_matrix.csv').values
+co2_matrix = pd.read_csv('EMO/ciudad_ixtepec_co2_matrix.csv').values
+turns_matrix= pd.read_csv('EMO/ciudad_ixtepec_turns_matrix.csv').values
 n_points = dist_matrix.shape[0]
 start_node = n_points - 1  # Central node
 
