@@ -11,7 +11,7 @@ G = ox.graph_from_place(place, network_type='drive')
 
 # Get 10 random delivery points
 nodes = list(G.nodes)
-delivery_nodes = random.sample(nodes, 15)
+delivery_nodes = random.sample(nodes, 10)
 
 # Save lat/lon of delivery points
 delivery_points = []
@@ -20,10 +20,15 @@ for node in delivery_nodes:
     delivery_points.append({'node': node, 'lat': point['y'], 'lon': point['x']})
 
 # Add travel time to edges (assume 40 km/h avg speed)
+
 for u, v, data in G.edges(data=True):
-    speed_kph = 40
+    speed_kph = 35
     speed_mps = speed_kph * 1000 / 3600
-    data['travel_time'] = data['length'] / speed_mps  # seconds
+    bias=1
+    if random.random() < 0.5:
+          bias=1.5  # 50% chance to increase travel time by 50%
+
+    data['travel_time'] = data['length'] / speed_mps*bias  # seconds
 
 # Build distance and time matrices
 distance_matrix = []
@@ -50,7 +55,18 @@ for i in range(len(delivery_points)):
     distance_matrix.append(row_dist)
     time_matrix.append(row_time)
 
-# Export results
+emission_rate = 0.192  # grams CO₂ per meter
+
+co2_matrix = []
+for i in range(len(distance_matrix)):
+    row_co2 = []
+    for j in range(len(distance_matrix)):
+        co2 = distance_matrix[i][j] * emission_rate
+        row_co2.append(co2)
+    co2_matrix.append(row_co2)
+
+# Export CO₂ matrix
+pd.DataFrame(co2_matrix).to_csv("EMO/ciudad_ixtepec_co2_matrix.csv", index=False)
 pd.DataFrame(delivery_points).to_csv("EMO/ciudad_ixtepec_points.csv", index=False)
 pd.DataFrame(distance_matrix).to_csv("EMO/ciudad_ixtepec_distance_matrix.csv", index=False)
 pd.DataFrame(time_matrix).to_csv("EMO/ciudad_ixtepec_time_matrix.csv", index=False)
