@@ -52,6 +52,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\EMO\ciudad_ixtepec_co2_matrix.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\EMO\ciudad_ixtepec_distance_matrix.csv">
           <value>
             <Attribute>
