@@ -176,7 +176,7 @@ for idx, perm in enumerate(all_perms):
         total_turns += turns_matrix[route[i], route[i + 1]]
     penalized_time = total_time + (TURN_PENALTY * total_turns)
 
-    results[idx] = [total_dist, penalized_time, total_co2]
+    results[idx] = [total_dist, total_turns, total_co2]
 
 # Save results to CSV
 np.savetxt('EMO/all_permutations_objectives.csv', results, delimiter=',', header='distance,time,co2', comments='')
@@ -187,7 +187,7 @@ import matplotlib.pyplot as plt
 from itertools import combinations
 
 # Plot all pairwise combinations of the three columns: distance, time, co2
-col_names = ['Total Distance', 'Total Time', 'Total CO2']
+col_names = ['Total Distance', 'Total Turns', 'Total CO2']
 plt.figure(figsize=(18, 5))
 
 for idx, (i, j) in enumerate(combinations(range(3), 2)):
