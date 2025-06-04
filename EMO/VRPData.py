@@ -107,3 +107,49 @@ plt.tight_layout()
 plt.savefig("ciudad_ixtepec_map_highres.png", dpi=300)
 plt.show()
 
+#%%
+import numpy as np
+import pandas as pd
+import itertools
+
+# Load matrices
+dist_matrix = pd.read_csv('EMO/ciudad_ixtepec_distance_matrix.csv', index_col=0).values
+time_matrix = pd.read_csv('EMO/ciudad_ixtepec_time_matrix.csv', index_col=0).values
+co2_matrix = pd.read_csv('EMO/ciudad_ixtepec_co2_matrix.csv', index_col=0).values
+
+n_points = dist_matrix.shape[0]
+start_node = n_points - 1  # Central node
+
+# All permutations of delivery nodes (excluding start node)
+nodes = list(range(n_points - 1))
+all_perms = list(itertools.permutations(nodes))
+
+results = np.zeros((len(all_perms), 3))  # columns: distance, time, co2
+
+for idx, perm in enumerate(all_perms):
+    route = [start_node] + list(perm) + [start_node]
+    total_dist = 0
+    total_time = 0
+    total_co2 = 0
+    for i in range(len(route) - 2):
+        total_dist += dist_matrix[route[i], route[i + 1]]
+        total_time += time_matrix[route[i], route[i + 1]]
+        total_co2 += co2_matrix[route[i], route[i + 1]]
+    results[idx] = [total_dist, total_time, total_co2]
+
+# Save results to CSV
+np.savetxt('EMO/all_permutations_objectives.csv', results, delimiter=',', header='distance,time,co2', comments='')
+
+
+#%%
+import matplotlib.pyplot as plt
+
+# Scatter plot of the first two columns (distance vs time) of all permutations
+plt.figure(figsize=(8, 6))
+plt.scatter(results[:, 0], results[:, 2], alpha=0.5, s=10)
+plt.xlabel('Total Distance')
+plt.ylabel('Total Time')
+plt.title('All Permutations: Distance vs Time')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
