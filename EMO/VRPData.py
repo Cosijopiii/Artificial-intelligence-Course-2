@@ -11,7 +11,7 @@ G = ox.graph_from_place(place, network_type='drive')
 
 # Get 10 random delivery points
 nodes = list(G.nodes)
-delivery_nodes = random.sample(nodes, 20)
+delivery_nodes = random.sample(nodes, 10)
 
 # Save lat/lon of delivery points
 delivery_points = []
